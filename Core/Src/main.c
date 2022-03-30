@@ -172,44 +172,48 @@ int main(void)
 	SystemCoreClockUpdate();
   //printf("\r\nINIT ARMCC OK @ %ld MHz\r\n",(uint32_t)SystemCoreClock/1000000);
   
-  char text[] = "test\r\n";
+  char text[50] = "test\r\n";
   HAL_UART_Transmit(&huart3, (uint8_t *)text, sizeof(text), 0xFFFF);				//Use USART3
 	
-//	for (uint8_t u8_i = 0; u8_i < TX_LEN; u8_i++)
-//  {
-//	  /* Set data */
-//	  s16_src = (int16_t*) &s16_reconstructed[u8_i];
-//	  u8_curfitComp = (uint8_t*) &u8_curvefitCompare[u8_i];
-//	  f32_curfitLineRef = (float*) &f32_curvefitLineRef[u8_i];
-//	  u64_bitmap = u64Func_GetBitmap(u8_curfitComp, RX_LEN);
+	for (uint8_t u8_i = 0; u8_i < TX_LEN; u8_i++)
+  {
+	  /* Set data */
+	  s16_src = (int16_t*) &s16_reconstructed[u8_i];
+	  u8_curfitComp = (uint8_t*) &u8_curvefitCompare[u8_i];
+	  f32_curfitLineRef = (float*) &f32_curvefitLineRef[u8_i];
+	  u64_bitmap = u64Func_GetBitmap(u8_curfitComp, RX_LEN);
 
-//	  /* Start timer */
-//	  DWT_Start();
+	  /* Start timer */
+	  DWT_Start();
 
-//	  /* Estimate */
-//	  vFunc_CurfitEstimation(s16_src, &curfitCoef, RX_LEN, u64_bitmap);
-//	  vFunc_GetCurveFitLine(s16_curfitLine, &curfitCoef, RX_LEN);
+	  /* Estimate */
+	  vFunc_CurfitEstimation(s16_src, &curfitCoef, RX_LEN, u64_bitmap);
+	  vFunc_GetCurveFitLine(s16_curfitLine, &curfitCoef, RX_LEN);
 
-//	  /* Stop timer */
-//	  f32_duration += DWT_GetTime_us();
-//	  DWT_Stop();
+	  /* Stop timer */
+	  f32_duration += DWT_GetTime_us();
+	  DWT_Stop();
 
-//	  /* Calculate accuracy */
-//	  vFunc_ConvertS16toFloat(s16_curfitLine, f32_curfitLine, RX_LEN);
-//	  f32_snr = arm_snr_f32(f32_curfitLineRef, f32_curfitLine, RX_LEN);
-//	  f32_accuracy = 100.0f - (100.0f / f32_snr);
-//	  f32_accuracyFrame += f32_accuracy;
+	  /* Calculate accuracy */
+	  vFunc_ConvertS16toFloat(s16_curfitLine, f32_curfitLine, RX_LEN);
+	  f32_snr = arm_snr_f32(f32_curfitLineRef, f32_curfitLine, RX_LEN);
+	  f32_accuracy = 100.0f - (100.0f / f32_snr);
+	  f32_accuracyFrame += f32_accuracy;
 
-//	  /* Print to stdout */
-//	  printf("Accuracy TX[%d]: %.2f %%\r\n", u8_i, f32_accuracy);
-//  }
-//	
-//	f32_accuracyFrame /= TX_LEN;
-//  f32_duration /= 1000;
+	  /* Print to stdout */
+	  printf("Accuracy TX[%d]: %.2f %%\r\n", u8_i, f32_accuracy);
+  }
+	
+	f32_accuracyFrame /= TX_LEN;
+  f32_duration /= 1000;
 
-//  printf("\r\n");
-//  printf("Frame Accuracy: %.2f %%\r\n", f32_accuracyFrame);
-//  printf("Frame Duration: %.2f ms\r\n", f32_duration);
+  printf("\r\n");
+  printf("Frame Accuracy: %.2f %%\r\n", f32_accuracyFrame);
+  printf("Frame Duration: %.2f ms\r\n", f32_duration);
+  
+  snprintf(text, sizeof(text), "Frame Duration: %.2f ms \r\n", f32_duration);   //puts string into buffer
+  HAL_UART_Transmit(&huart3, (uint8_t *)text, sizeof(text), 0xFFFF);				    //Use USART3
+  
   /* USER CODE END 2 */
 	
   /* Infinite loop */
@@ -217,8 +221,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_Delay(1000);
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+    //HAL_Delay(1000);
+    //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

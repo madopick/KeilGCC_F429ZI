@@ -8,6 +8,9 @@
 #include "cramel.h"
 #include <string.h>
 
+
+#define __CLZ             (uint8_t)__builtin_clz
+
 #ifdef VER2_UPDATE
 static uint8_t vFunc_GetMinVal(uint8_t *u8p_src, uint8_t u8_len);				//update cramel Jenn
 #endif
@@ -126,9 +129,9 @@ static void vFunc_GetCoefByCramersRule(int32_t *s32p_arrA,
   }
 
   // Scale
-  u8_lzc[0] = __clz ((uint32_t) (s64_detC0 >> 32));
-  u8_lzc[1] = __clz ((uint32_t) (s64_detC1 >> 32));
-  u8_lzc[2] = __clz ((uint32_t) (s64_detC2 >> 32));
+  u8_lzc[0] = __CLZ ((uint32_t) (s64_detC0 >> 32));
+  u8_lzc[1] = __CLZ ((uint32_t) (s64_detC1 >> 32));
+  u8_lzc[2] = __CLZ ((uint32_t) (s64_detC2 >> 32));
 
   u8_bsCnt = vFunc_GetMinVal(u8_lzc, 3) - 1; //minus 1 to avoid overflow to sign bit
 
